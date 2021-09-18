@@ -1,0 +1,19 @@
+{
+  "name": "PHP 木马扫描",
+  "name_en": "Trojan_Scan",
+  "main": "index.js",
+  "icon": "eye",
+  "version": "0.1",
+  "description": "PHP Web 木马扫描",
+  "description_en": "PHP Web Trojan scanner",
+  "author": {
+    "name": "user",
+    "email": "user@u0u.us"
+  },
+  "category": "安全工具",
+  "category_en": "SecTool",
+  "multiple": false,
+  "scripts": [
+    "php"
+  ]
+}
