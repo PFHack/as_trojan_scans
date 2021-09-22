@@ -21,7 +21,6 @@ module.exports = {
         update_time: "更新时间",
         result: "原因",
         mark: "特征",
-        link: "动作",
     }
 }
 }

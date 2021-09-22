@@ -43,13 +43,93 @@ class UI {
     
         this.layout = layout;
     }
-    createToolbar() {
+    createToolbar(cell) {
         let toolbar = cell.attachToolbar();
         toolbar.loadStruct([
         { id: 'start', type: 'button', text: LANG['cella']['start'], icon: 'play' }
         ]);
         this.toolbar = toolbar;
     }
+
+    createForm(cell) {
+        let formdata=[{
+            type: 'settings', position: 'label-left',
+            labelWidth: 150, inputWidth: 200
+          }, {
+            type: 'block', inputWidth: 'auto',
+            offsetTop: 12,
+            list: [{
+                type: 'input', label: LANG['cella']['form']['path'], name: 'scanpath',
+                required: true, validate:"NotEmpty",
+                value: '/var/www/html/default/'
+              }, {
+                type: 'input', label: LANG['cella']['form']['file_ext'], name: 'scanext',
+                required: true,
+                value: ''
+            }]
+        }];
+        let form = cell.attachForm(formdata, true);
+        form.enableLiveValidation(true);
+        this.form = form;
+    }
+
+    createGrid(cell) {
+        let grid = cell.attachGrid();
+        grid.setHeader(`
+          ${LANG['cellb']['grid']['id']},
+          ${LANG['cellb']['grid']['file']},
+          ${LANG['cellb']['grid']['update_time']},
+          ${LANG['cellb']['grid']['result']},
+          ${LANG['cellb']['grid']['mark']}
+        `);
+        grid.setColTypes("ro,ro,ro,ro,ro");
+        grid.setColSorting('str,str,str,str,str');
+        grid.setInitWidths("50,250,100,80,100");
+        grid.setColAlign("left,left,left,left,left");
+        grid.enableMultiselect(true);
+        grid.init();
+        this.grid = grid;
+    }
+    bindToolbarClickHandler(callback) {
+        this.toolbar.attachEvent('onClick', (id) => {
+            switch (id) {
+                case 'start':
+                    // this.win.win.progressOn();
+                    // 获取FORM表单
+                    let formvals = this.form.getValues();
+                    callback({
+                        scanpath: formvals['scanpath'],
+                        scanext: formvals['scanext']
+                      }).then((ret) => {
+                        console.log(ret);
+                         // 解析扫描结果
+                        let griddata = [];
+                        ret.text.split('\n').map((item, i) => {
+                            if (!item) { return };   
+                            item = antSword.noxss(item);
+                            griddata.push(
+                                {
+                                    "id": item.split('|')[0],
+                                    "file":  item.split('|')[1],
+                                    "update_time":  item.split('|')[2],
+                                    "result":  item.split('|')[3],
+                                    "mark":  item.split('|')[4],
+                                }
+                            );     
+                        })
+                        this.grid.clearAll();
+                        this.grid.parse({"rows": griddata}, "json");
+                        this.layout.cells('a').collapse();
+                        this.layout.cells('b').expand();
+                        toastr.success(LANG['success'], antSword['language']['toastr']['success']);
+                    }).catch((err) => {
+                        console.log(err);
+                        toastr.error(LANG['error'], antSword['language']['toastr']['error']);
+                      })
+                    break;
+            }
+        });
+    }    
 }
 
 module.exports = UI;
