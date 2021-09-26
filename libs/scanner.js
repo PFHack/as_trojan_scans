@@ -13,7 +13,6 @@ class Scanner {
         let core = new antSword['core'][opt['type']](opt);
         // 请求数据
         let code = {};
-        console.log(argv);
         if (opt['type'] == 'php') {
             code = {
                 _: this.template[opt['type']](argv.scanpath, argv.scanext)
@@ -41,10 +40,18 @@ class Scanner {
             function getCode()
                 {
                 return array(
-                    '后门特征->cha88.cn'=>'cha88\.cn',
-                    '后门特征->c99shell'=>'c99shell',
-                    '后门特征->phpspy'=>'phpspy',
-                    '后门特征->Scanners'=>'Scanners');
+                    '加密后门特征->eval(gzinflate('=>'eval\(gzinflate\(.*\)\)',
+                    '后门特征->eval("?>'=>'eval\(.*\)',
+                    '后门特征->cmd.php'=>'cmd\.php',
+                    '后门特征->webshell'=>'webshell',
+                    '可疑代码特征->system('=>'system\(.*\)',
+                    '可疑代码特征->passthru('=>'passthru\(.*\)',
+                    '可疑代码特征->shell_exec('=>'shell_exec\(.*\)',
+                    '可疑代码特征->exec('=>'exec\(.*\)',
+                    '可疑代码特征->popen('=>'popen\(.*\)',
+                    '可疑代码特征->proc_open'=>'proc_open',
+                    '可疑代码特征->assert($'=>'assert\(.*\)'
+                    );
                 }
             function scan($path = '\.',$is_ext,$php_code) {
                 $count=$scanned=0;
@@ -86,7 +93,7 @@ class Scanner {
                 closedir( $dh );
             }    
             $dir = "${scanpath}";
-            $is_ext="\(\.+\)";
+            $is_ext="\(\.*\)";
             $dir = substr($dir,-1)!="/"?$dir."/":$dir;
             $count=$scanned=0;
             $php_code = getCode();

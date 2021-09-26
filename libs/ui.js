@@ -13,7 +13,6 @@ class UI {
         // 创建一个windows窗口
       this.win = new WIN({
         title: `${LANG['title']} - ${opt['url']}`,
-        // 作为一名代码洁癖患者，我连尺寸的Number都要求有意义，嗯。
         height: 444,
         width: 520,
       });
@@ -84,7 +83,7 @@ class UI {
         `);
         grid.setColTypes("ro,ro,ro,ro,ro");
         grid.setColSorting('str,str,str,str,str');
-        grid.setInitWidths("50,250,100,80,100");
+        grid.setInitWidths("50,250,100,100,150");
         grid.setColAlign("left,left,left,left,left");
         grid.enableMultiselect(true);
         grid.init();
@@ -94,39 +93,36 @@ class UI {
         this.toolbar.attachEvent('onClick', (id) => {
             switch (id) {
                 case 'start':
-                    // this.win.win.progressOn();
+                    this.win.win.progressOn();
                     // 获取FORM表单
                     let formvals = this.form.getValues();
                     callback({
                         scanpath: formvals['scanpath'],
                         scanext: formvals['scanext']
                       }).then((ret) => {
-                        console.log(ret);
                          // 解析扫描结果
                         let griddata = [];
                         ret.text.split('\n').map((item, i) => {
                             if (!item) { return };   
                             item = antSword.noxss(item);
-                            griddata.push(
-                                {
-                                    "id": item.split('|')[0],
-                                    "file":  item.split('|')[1],
-                                    "update_time":  item.split('|')[2],
-                                    "result":  item.split('|')[3],
-                                    "mark":  item.split('|')[4],
-                                }
-                            );     
+                            griddata.push({
+                                    id: i,
+                                    data:item.split('|')
+                                });     
                         })
                         this.grid.clearAll();
-                        this.grid.parse({"rows": griddata}, "json");
+                        this.grid.parse({rows: griddata}, "json");
                         this.layout.cells('a').collapse();
                         this.layout.cells('b').expand();
                         toastr.success(LANG['success'], antSword['language']['toastr']['success']);
+                        this.win.win.progressOff();
                     }).catch((err) => {
-                        console.log(err);
                         toastr.error(LANG['error'], antSword['language']['toastr']['error']);
+                        this.win.win.progressOff();
                       })
                     break;
+                default:
+                    break;    
             }
         });
     }    
