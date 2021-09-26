@@ -40,7 +40,6 @@ class Scanner {
             function getCode()
                 {
                 return array(
-                    '加密后门特征->eval(gzinflate('=>'eval\(gzinflate\(.*\)\)',
                     '后门特征->eval("?>'=>'eval\(.*\)',
                     '后门特征->cmd.php'=>'cmd\.php',
                     '后门特征->webshell'=>'webshell',
