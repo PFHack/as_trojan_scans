@@ -14,7 +14,7 @@ class UI {
       this.win = new WIN({
         title: `${LANG['title']} - ${opt['url']}`,
         height: 444,
-        width: 520,
+        width: 820,
       });
       this.createMainLayout();
         return {

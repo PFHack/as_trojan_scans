@@ -40,7 +40,7 @@ class Scanner {
             function getCode()
                 {
                 return array(
-                    '后门特征->eval("?>'=>'eval\(.*\)',
+                    '后门特征->eval('=>'eval\\(\(@|\"|\\'|\\$\)',
                     '后门特征->cmd.php'=>'cmd\.php',
                     '后门特征->webshell'=>'webshell',
                     '可疑代码特征->system('=>'system\(.*\)',
@@ -49,7 +49,14 @@ class Scanner {
                     '可疑代码特征->exec('=>'exec\(.*\)',
                     '可疑代码特征->popen('=>'popen\(.*\)',
                     '可疑代码特征->proc_open'=>'proc_open',
-                    '可疑代码特征->assert($'=>'assert\(.*\)'
+                    '可疑代码特征->assert($'=>'assert\\(\(@|\"|\\'|\\$\)',
+                    '加密后门特征->eval(gzinflate('=>'eval\\(gzinflate\(\.*\)',
+                    '加密后门特征->eval(base64_decode('=>'eval\\(base64_decode\(\.*\)',
+                    '加密后门特征->eval(gzuncompress('=>'eval\(gzuncompress\(\.*\)',
+                    '加密后门特征->eval(gzdecode('=>'eval\(gzdecode\(\.*\)',
+                    '加密后门特征->eval(str_rot13('=>'eval\(str_rot13\(\.*\)',
+                    '加密后门特征->gzuncompress(base64_decode('=>'gzuncompress\(base64_decode\(\.*\)',
+                    '加密后门特征->base64_decode(gzuncompress('=>'base64_decode\(gzuncompress\(\.*\)'
                     );
                 }
             function scan($path = '\.',$is_ext,$php_code) {
@@ -73,7 +80,7 @@ class Scanner {
                                 $content= str_replace($replace,"",$content);
                                 foreach($php_code as $key => $value)
                                 {
-                                    if(preg_match("/$value/i",$content))
+                                    if(preg_match_all("/$value/i",$content))
                                     {
                                         $count++;
                                         $j = $count % 2 + 1;
