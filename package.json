@@ -1,15 +1,15 @@
 {
-  "name": "PHP 木马扫描",
-  "name_en": "Trojan_Scan",
+  "name": "PHP 木马扫描插件",
+  "name_en": "TrojanScan",
   "main": "index.js",
   "icon": "eye",
   "version": "0.1",
-  "description": "PHP Web 木马扫描",
+  "description": "通过 Webshell 扫描目标主机 木马扫描",
   "description_en": "PHP Web Trojan scanner",
   "author": {
-    "name": "user",
-    "email": "user@u0u.us"
-  },
+    "name": "PFinal南丞",
+    "email": "lampxiezi@163.com"
+   },
   "category": "安全工具",
   "category_en": "SecTool",
   "multiple": false,
